@@ -6,13 +6,13 @@ package gorjan.exam.connection.communication;
  *
  */
 public class FtpCode {
-    public final static String connectedSuccess="220 ";
-    public final static  String usernameSuccess="331 ";
-    public final static String passwordSuccess="230 ";
-    public final static  String passiveModeSuccess="227 ";
-    public final static  String binaryModeSuccess="200 ";
-    public final static  String transferSuccess="226 ";
-    public final static  String dataChannelOpen="150 ";
+    public final static String CONNECTED_SUCCESS="220 ";
+    public final static  String USERNAME_SUCCESS="331 ";
+    public final static String PASSWORD_SUCCESS="230 ";
+    public final static  String PASSIVE_MODE_SUCCESS="227 ";
+    public final static  String BINARY_MODE_SUCCESS="200 ";
+    public final static  String TRANSFER_SUCCESS="226 ";
+    public final static  String DATA_CHANNEL_OPEN="150 ";
 	public FtpCode() {
     }
 

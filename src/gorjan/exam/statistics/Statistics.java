@@ -28,7 +28,7 @@ public class Statistics extends StatisticsTools {
     public void setFileTransferTime(double fileTransferTime) {
 	this.fileTransferTime = fileTransferTime;
 	addToTotalTime(fileTransferTime);
-	this.numberOfFiles += 1;
+	numberOfFiles += 1;
     }
     
     /**

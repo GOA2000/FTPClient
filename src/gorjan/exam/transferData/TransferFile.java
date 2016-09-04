@@ -1,8 +1,6 @@
 package gorjan.exam.transferData;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 /**
  * TransferFile class that holds the data for the specific file to be

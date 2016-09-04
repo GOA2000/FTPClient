@@ -17,7 +17,7 @@ public class ConnectionSetup {
     static final int DEF_PORT = 21;
     static final String DEF_SERVER_IP = "127.0.0.1";
     static final String DEF_USERNAME = "user";
-    static final String DEF_PASSWORD = "me@me.com";
+    static final String DEF_PASSWORD = "pass";
 
     
     /** 
@@ -33,8 +33,7 @@ public class ConnectionSetup {
 	/*
 	 * We will first iterate through the arguments provided.
 	 */
-	for (int i = 0; i < args.length - 1; i++) {
-	    
+	for (int i = 0; i < args.length; i++) {
 	    /*
 	     * If the parameters username or password have not been both
 	     * included the app will default to the default predefined values
@@ -45,17 +44,20 @@ public class ConnectionSetup {
 		if (args[i + 2].toLowerCase().equals("-p")) {
 		    this.username = args[i + 1];
 		    this.password = args[i + 3];
-		} else {
+		}
+	    } 
+            if (this.username==null || this.password==null ) {
+        	       	
 		    System.out.println(
 			    "You have not entered the username or password \nUsing default Username and Password");
 		    setDefaultUserPassword();
 		}
-	    }
 	    /*
 	     * This flag configures the port and the IP of the FTP server.
 	     */
 	    if (args[i].toLowerCase().equals("-server")) {
 		this.serverIp = args[i + 1];
+		break;
 	    }
 	}
 
@@ -83,13 +85,21 @@ public class ConnectionSetup {
 	setDefaultServer();
     }
 
+    public ConnectionSetup(ConnectionSetup initial) {
+	this.username=initial.username;
+	this.password=initial.password;
+	this.serverIp=initial.serverIp;
+	this.port=initial.port;
+	this.pasiveUploadport=0;
+    }
+
     /**
      *  Method that extracts the data recieved by FTP passive mode and calculates
      *  the port to be used for transfer ie. Entering Passive Mode
      *  (127,0,0,1,246,135) to 246*256+135
      * @param response (String) response from the ftp Server.
      */
-    public void extractPassiveModeData(String response) {
+    public synchronized void extractPassiveModeData(String response) {
 	String passiveModeData = null;
 	/*
 	 * The neccessary data is enclosed in brackets but the response has other characters
@@ -99,7 +109,6 @@ public class ConnectionSetup {
 	String[] arrayOfPasiveModeData = passiveModeData.split(",");
 	int sendPort = (Integer.parseInt(arrayOfPasiveModeData[4]) * 256
 		+ (Integer.parseInt(arrayOfPasiveModeData[5])));
-
 	this.pasiveUploadport = sendPort;
     }
 
@@ -152,7 +161,7 @@ public class ConnectionSetup {
     }
 
     public int getPasiveUploadport() {
-	return pasiveUploadport;
+	return this.pasiveUploadport;
     }
 
     /**
