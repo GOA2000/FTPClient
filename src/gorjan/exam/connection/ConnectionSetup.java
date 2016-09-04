@@ -1,5 +1,6 @@
 package gorjan.exam.connection;
 
+
 /** 
  * ConnectionSetup class configures the connection details which are going to be used
  * for the file transfer.
@@ -20,12 +21,14 @@ public class ConnectionSetup {
     static final String DEF_PASSWORD = "pass";
 
     
-    /** 
-     *  ConnectionSetup constructor reads through the argument flags and
-     *  if the verification notices that any of the parameters is missing 
-     *  assigns default values to the connection parameters.
+    /**
+     * ConnectionSetup constructor reads through the argument flags and if the
+     * verification notices that any of the parameters is missing assigns
+     * default values to the connection parameters.
      * 
-     * @param args (String[])are the parameters provided with running of the program
+     * @param args
+     *            (String[])are the parameters provided with running of the
+     *            program
      */
     public ConnectionSetup(String[] args) {
 	this.port = DEF_PORT;
@@ -44,46 +47,37 @@ public class ConnectionSetup {
 		if (args[i + 2].toLowerCase().equals("-p")) {
 		    this.username = args[i + 1];
 		    this.password = args[i + 3];
+
 		}
-	    } 
-            if (this.username==null || this.password==null ) {
-        	       	
-		    System.out.println(
-			    "You have not entered the username or password \nUsing default Username and Password");
-		    setDefaultUserPassword();
-		}
+	    }
+	    if (this.username == null || this.password == null) {
+
+		System.out
+			.println("You have not entered the username or password \nUsing default Username and Password");
+		setDefaultUserPassword();
+	    }
+
 	    /*
-	     * This flag configures the port and the IP of the FTP server.
+	     * This flag configures the IP of the FTP server.
 	     */
 	    if (args[i].toLowerCase().equals("-server")) {
 		this.serverIp = args[i + 1];
+		int count = serverIp.length() - serverIp.replace(".", "").length();
+		if (count!=3){
+		    System.out.println("Invalid IP address assigning default values");
+		    setDefaultServer();
+		}
 		break;
 	    }
+	}
+        // If the serverIp has not been assigned the default IP will be assigned.
+	if (this.serverIp == null) {
+	    setDefaultServer();
 	}
 
     }
 
-    /** 
-     * Constructor for users with no Username and Password
-     * 
-     * @param serverIp (String) is the provided String representation of the ip address.
-     */
-    public ConnectionSetup(String serverIp) {
-	this.serverIp = serverIp;
-	this.port = DEF_PORT;
-	setDefaultUserPassword();
-    }
 
-    /**
-     * Constructor for users with no server specified
-     * @param username (String) representation of the Username
-     * @param password (String) representation of the Password
-     */
-    public ConnectionSetup(String username, String password) {
-	this.username = username;
-	this.password = password;
-	setDefaultServer();
-    }
 
     public ConnectionSetup(ConnectionSetup initial) {
 	this.username=initial.username;
@@ -124,7 +118,8 @@ public class ConnectionSetup {
     /**
      *  Method to set default Server.
      */
-    void setDefaultServer() {
+    private void setDefaultServer() {
+	System.out.println("Error has occured, using default server: "+DEF_SERVER_IP);
 	this.serverIp = DEF_SERVER_IP;
     }
 

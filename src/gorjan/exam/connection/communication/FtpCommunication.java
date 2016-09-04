@@ -20,7 +20,7 @@ import gorjan.exam.transferData.TransferFile;
 
 /**
  * FtpCommunication class is the class that contains all the communication
- * methods to be used with the FTPServer
+ * methods to be used with the FTPServer and methods setting the communication modes.
  * 
  * @author Liquid Sun
  *
@@ -36,7 +36,16 @@ public class FtpCommunication {
     private Statistics statistics;
     private StatisticsTools statTools;
     private TransferFile transferFile;
+    private String response;
 
+    /**
+     * FtpCommunication() constructor sets up the necessary parameters which
+     * will be used during the use of methods in this class.
+     * 
+     * @param connectionSetup
+     *            ConnectionSetup is the forwarded setup parameters to be used
+     *            during the execution
+     */
     public FtpCommunication(ConnectionSetup connectionSetup) {
 	this.connectionSetup = new ConnectionSetup(connectionSetup);
 	this.statistics = new Statistics();
@@ -45,29 +54,12 @@ public class FtpCommunication {
     }
 
     /**
-     * ftpInitialize() sets up the necessary parameters which will be used
-     * during the use of methods in this class.
-     * 
-     * @param connectionSetup
-     *            ConnectionSetup is the forwarded setup parameters to be used
-     *            during the execution
-     */
-    // public void ftpInitialize(ConnectionSetup connectionSetup) {
-    // this.connectionSetup = connectionSetup;
-    // this.statistics = new Statistics();
-    // this.statTools = new StatisticsTools();
-    //
-    // }
-
-    /**
      * ReadLine() connects to the pre-configured BufferedReader and identifies
      * if the the last read line contains one of the FTP response codes.
      * 
      * @return Last line of response code FTP message
-     * @throws IOException
-     * @throws InterruptedException
      */
-    public String readLine() throws IOException {
+    public String readLine()  {
 	String strLine = null;
 	String line = null;
 
@@ -93,10 +85,10 @@ public class FtpCommunication {
     }
 
     /**
-     * Sendline() sends via the buffered writer.
+     * Sendline() sends a string via the buffered writer.
      * 
      * @param line
-     *            String is the String we send to the FTP server.
+     *            (String) is the String we send to the FTP server.
      */
     public void sendLine(String line) {
 	if (socket == null) {
@@ -114,51 +106,49 @@ public class FtpCommunication {
 	    try {
 		socket.close();
 	    } catch (IOException e1) {
-		 Logger.getLogger("FTPlogger").warning(e1.toString());
+		Logger.getLogger("FTPlogger").warning(e1.toString());
+
 	    }
 	    socket = null;
-	   
+
 	}
     }
 
     /**
      * connect() method Connects to the server in question and expects the FTP
-     * code for the succesfull connection. The method then proceedes to connect
-     * with the provided data (Username and Password)or the default
+     * code for the successful connection. The method then proceeds to connect
+     * with the provided data (Username and Password) or the default
      * preconfigured data if the data provided is incomplete.
      * 
      */
-    public void connect(){
-	// Configuration of socket, reader and writer.
-	try {
+    public void connect() {
+	
+        try {
+	    // Configuration of socket, reader and writer.
 	    socket = new Socket(connectionSetup.getServerIp(), connectionSetup.getPort());
-		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		String response = readLine();
-		if (!response.startsWith(CONNECTED_SUCCESS)) {
-		    throw new IOException("Unexpected response:" + response);
-		}
-		sendLine("USER " + connectionSetup.getUsername());
-		response = readLine();
-		// System.out.println(response);
-		if (!response.startsWith(USERNAME_SUCCESS)) {
-
-		    throw new IOException("Unexpected Response" + response);
-		}
-		sendLine("PASS " + connectionSetup.getPassword());
-		response = readLine();
-		// System.out.println(response);
-
-		if (!response.startsWith(PASSWORD_SUCCESS)) {
-		    System.out.print("Fail");
-		    throw new IOException("unsuccessful login" + response);
-		}
+	    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	    writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+	    response = readLine();
 	    
-	} catch (IOException e) {
-	    Logger.getLogger("FTPlogger").warning(e.toString());
+	    if (!response.startsWith(CONNECTED_SUCCESS)) {
+		problemClose("Connection Error: "+response);
+	    }
+	    sendLine("USER " + connectionSetup.getUsername());
+	    response = readLine();
+	    
+	    if (!response.startsWith(USERNAME_SUCCESS)) {
+		problemClose("Username Error: "+response);
+	    }
+	    sendLine("PASS " + connectionSetup.getPassword());
+	    response = readLine();
+
+	    if (!response.startsWith(PASSWORD_SUCCESS)) {
+		problemClose("Password Error: "+response);
 	    }
 
-
+	} catch (IOException e) {
+	    Logger.getLogger("FTPlogger").warning(e.toString());
+	}
 
     }
 
@@ -169,22 +159,14 @@ public class FtpCommunication {
      * 
      */
 
-    public void setPasiveMode()  {
+    public void setPasiveMode() {
 
-	// System.out.println("Attempting to set pasive mode: ");
-	try {
-	    sendLine("PASV");
-	    String response = readLine();
-	    if (!response.startsWith(PASSIVE_MODE_SUCCESS)) {
-		    throw new IOException("Could not set passive mode: " + response);
-	    }
-	    connectionSetup.extractPassiveModeData(response);
-	} catch (IOException e) {
-	    Logger.getLogger("FTPlogger").warning(e.toString());
+	sendLine("PASV");
+	response = readLine();
+	if (!response.startsWith(PASSIVE_MODE_SUCCESS)) {
+	problemClose("Passive mode error: "+response);
 	}
-	
-	
-	
+	connectionSetup.extractPassiveModeData(response);
 
     }
 
@@ -195,23 +177,18 @@ public class FtpCommunication {
      * 
      */
     public void setBinaryMode() {
-	// System.out.println("Attempting to set binary mode: ");
-	try {
-	    sendLine("TYPE I");
-	    String response = readLine();
-		if (!response.startsWith(BINARY_MODE_SUCCESS)) {
-		    throw new IOException("Could not set Binary mode: " + response);
-		}
-	    
-	} catch (IOException e) {
-	    Logger.getLogger("FTPlogger").warning(e.toString());
-	}
 	
+	sendLine("TYPE I");
+	response = readLine();
+	if (!response.startsWith(BINARY_MODE_SUCCESS)) {
+	problemClose("Binary mode error: "+response);
+	}
+
     }
 
     /**
      * disconnect() Method This method sends the FTP server the quit command and
-     * then nulls the Socket that has been used.
+     * then closes  the Socket that has been used.
      * 
      */
     public void disconnect() {
@@ -229,7 +206,7 @@ public class FtpCommunication {
 
     /**
      * 
-     * sendFile() method Initializes all the neccessary streams and parameters
+     * sendFile() method Initializes all the necessary streams and parameters
      * for sending of the file including the loading of the File in question.
      * The method contains a check to see if the correct codes are sent from the
      * FTP server. It also activates the timers and invokes the methods to
@@ -242,29 +219,30 @@ public class FtpCommunication {
 
     public void sendFile(TransferFile theFile) {
 	this.transferFile = theFile;
-	String response = "";
 	try {
 	    fileInputStream = new FileInputStream("." + transferFile.getFileNameWithPath());
 	    bis = new BufferedInputStream(fileInputStream);
 	    sendLine("STOR " + transferFile.getFileName());
+	    // Openning of the upload data socket with the calculated passive
+	    // port
 	    uploadDataSocket = new Socket(connectionSetup.getServerIp(), connectionSetup.getPasiveUploadport());
 	    response = readLine();
 	    // Verifies the FTP response
 	    if (!response.startsWith(DATA_CHANNEL_OPEN)) {
-		throw new IOException("Problem sending File " + response);
+		problemClose("Problem sending File: "+response);
 	    }
 
-	    // Timmer for the Statistics
-	    double timerIn = System.currentTimeMillis();
 	    BufferedOutputStream output = new BufferedOutputStream(uploadDataSocket.getOutputStream());
-	    // buffer size
+	    // buffer size[4096]
 	    byte[] buffer = new byte[4096];
 	    int bytesRead = 0;
+	    // Timmer for the Statistics
+	    double timerIn = System.currentTimeMillis();
 
 	    while ((bytesRead = bis.read(buffer)) != -1) {
 		output.write(buffer, 0, bytesRead);
 	    }
-
+	    //Closing of streams and upload socket.
 	    output.flush();
 	    output.close();
 	    bis.close();
@@ -273,7 +251,7 @@ public class FtpCommunication {
 	    // Timer for the statistics
 	    double timerOut = System.currentTimeMillis();
 	    response = readLine();
-
+            //Statistics console write out.
 	    executeStatistics(transferFile, timerIn, timerOut);
 
 	} catch (FileNotFoundException e) {
@@ -305,6 +283,14 @@ public class FtpCommunication {
 		statTools.calculateAverageSpeed(transferFile.getFileSize(), statistics.getFileTransferTime()));
 	// Console printout for the statistics of this upload
 	StatisticsTools.ConsolePrintout(transferFile.getFileName(), statistics);
+    }
+    /**
+     * problemClose method closes the system and prints out the last server response.
+     * @param response(String)
+     */
+    private void problemClose(String response){
+	Logger.getLogger("FTPlogger").warning("Server response: "+response);
+	System.exit(0);
     }
 
 }

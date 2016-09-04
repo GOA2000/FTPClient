@@ -30,18 +30,40 @@ public class TransferFilesTools {
     List<String> fileList = null;
         
     for (int i = 0; i < args.length; i++) {
-        if (args[i].toLowerCase().equals("-files")) {
-		fileList = (Arrays
+
+	
+        if (args[i].toLowerCase().equals("-files")&& (i==args.length-2)) {
+                	fileList = (Arrays
 			  .asList(args[i + 1].replaceAll("/", Matcher.quoteReplacement(File.separator)).split(";")));
+
 	    }
+        
+        if(i==args.length-1){
+            if(args[i].toLowerCase().
+        	    equals("-files")){
+        	System.out.println(
+     		    "The files list is missing! Please try again.");
+     	        System.exit(0);
+            }
+            
+
+            if(!args[i-1].toLowerCase().
+        	    equals("-files")){
+        	System.out.println(
+     		    "The file flag \"-files\" is missing! Please try again.");
+     	        System.exit(0);
+            }
+        }
 	}
+       
+
 
 	if (fileList.size() > 5) {
 	    System.out.println(
 		    "Current limit is 5 files per one application run \nThe application will now close, please select 5 files max");
 	    System.exit(0);
 	}
-	return fileList;
+      return fileList;
 	
     }
  

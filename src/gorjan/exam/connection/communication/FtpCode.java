@@ -1,7 +1,7 @@
 package gorjan.exam.connection.communication;
 
 /**
- * FtpCode class contains the default FTP responses.
+ * FtpCode class contains the default FTP responses with trailing spaces.
  * @author Liquid Sun
  *
  */

@@ -13,6 +13,9 @@ public class StatisticsTools {
 	timerIn=timerIn/1000;
 	timerOut=timerOut/1000;
 	double transferTime = Math.round(timerOut - timerIn ) ;
+	if(transferTime<0.01){
+	    return 1;
+	}
 	return transferTime;
     }
 
@@ -90,8 +93,10 @@ public class StatisticsTools {
      * @param statistics (Statistics) The Statistics Object for the specific file transfer.
      */
     public static void ConsolePrintout(String fileName, Statistics statistics) {
-	System.out.println("Transfer stats for file: " + fileName + " With speed: " + statistics.getFileTransferRate()
-		+ " KB" + " and the download time of: " + secondToMinutes(statistics.getFileTransferTime())
-		+ ".");
+
+	 System.out.println(String.format("\nTransfer stats for file: =========> %s \nTransfer speed of: ~%.3f KB/s and upload time of: %03.0f seconds.",fileName,statistics.getFileTransferRate(),statistics.getFileTransferTime()));	
+	
+	
+	//" The average speed was:  %1$.3f KB/s and download time of:  %2$ seconds.",fileName ,statistics.getFileTransferRate() ,statistics.getFileTransferTime())
     }
 }
