@@ -30,7 +30,7 @@ Flags:
 -files is a flag for the file list (different files must be separated by ";")
 
 If in the folder where the JAR is located you have
-a foder named "var" that contains 5 files ie(1.mpr,2.mp3,3.mp3,4.mp3,5.mp3)
+a folder named "var" that contains 5 files ie(1.mpr,2.mp3,3.mp3,4.mp3,5.mp3)
 you will use the syntax:
 
 java -jar FTPClient.jar -u user1 -p password -server 127.0.0.1 -files /var/1.mp3;/var/2.mp3;/var/3.mp3;/var/4.mp3;/var/5.mp3
