@@ -35,8 +35,9 @@ you will use the syntax:
 
 java -jar FTPClient.jar -u user1 -p password -server 127.0.0.1 -files /var/1.mp3;/var/2.mp3;/var/3.mp3;/var/4.mp3;/var/5.mp3
 
-If values are not provided the FTPClient the FTPClient will substitute the incomplete values for its pre-defined default values
-syntax:
+If values are not provided the FTPClient it(FTPClient) will substitute the incomplete values for its pre-defined default values
+
+ie:
 
 java -jar FTPClient.jar -files /var/1.mp3;/var/2.mp3;/var/3.mp3;/var/4.mp3;/var/5.mp3
 
