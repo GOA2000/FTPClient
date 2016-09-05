@@ -212,7 +212,7 @@ public class FtpCommunication {
      * FTP server. It also activates the timers and invokes the methods to
      * printOut the statistics of the file transfer.
      * 
-     * @param filename
+     * @param theFile
      *            TransferFile The TransferFile Object and location which will
      *            be loaded and sent
      */
@@ -266,7 +266,7 @@ public class FtpCommunication {
     }
 
     /**
-     * executeStatistics() method calculates the transferTime, transferRate and
+     * executeStatistics() method calculates the transferTime, transferRate for the transfer file and
      * prints out the statistics to the console.
      * 
      * @param theFile
