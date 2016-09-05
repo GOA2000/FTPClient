@@ -22,7 +22,7 @@ public class ConnectionSetup {
 
     
     /**
-     * ConnectionSetup constructor reads through the argument flags and if the
+     * ConnectionSetup constructor reads through the argument array for connection related flags and if the
      * verification notices that any of the parameters is missing assigns
      * default values to the connection parameters.
      * 
@@ -78,7 +78,7 @@ public class ConnectionSetup {
     }
 
 
-
+    
     public ConnectionSetup(ConnectionSetup initial) {
 	this.username=initial.username;
 	this.password=initial.password;
@@ -88,7 +88,7 @@ public class ConnectionSetup {
     }
 
     /**
-     *  Method that extracts the data recieved by FTP passive mode and calculates
+     *  Method that extracts the data received by FTP passive mode and calculates
      *  the port to be used for transfer ie. Entering Passive Mode
      *  (127,0,0,1,246,135) to 246*256+135
      * @param response (String) response from the ftp Server.

@@ -23,6 +23,7 @@ public class Statistics extends StatisticsTools {
 
     /**
      * setFileTransferTime() saves the current file transfer time and adds it to the total transfer time variable.
+     * the method also increments the total number of uploaded files for later use with statistics.
      * @param fileTransferTime (Long) is the transfer time it took to upload a file.
      */
     public void setFileTransferTime(double fileTransferTime) {

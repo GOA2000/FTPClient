@@ -27,46 +27,38 @@ public class TransferFilesTools {
      *     
      */
     public static List<String> ListOfFiles(String[] args) {
-    List<String> fileList = null;
-        
-    for (int i = 0; i < args.length; i++) {
+	List<String> fileList = null;
 
-	
-        if (args[i].toLowerCase().equals("-files")&& (i==args.length-2)) {
-                	fileList = (Arrays
-			  .asList(args[i + 1].replaceAll("/", Matcher.quoteReplacement(File.separator)).split(";")));
+	for (int i = 0; i < args.length; i++) {
+            //If -files flag is found the next field in array is exstracted and converted to List.
+	    if (args[i].toLowerCase().equals("-files") && (i == args.length - 2)) {
+		fileList = (Arrays
+			.asList(args[i + 1].replaceAll("/", Matcher.quoteReplacement(File.separator)).split(";")));
 
 	    }
-        
-        if(i==args.length-1){
-            if(args[i].toLowerCase().
-        	    equals("-files")){
-        	System.out.println(
-     		    "The files list is missing! Please try again.");
-     	        System.exit(0);
-            }
-            
-
-            if(!args[i-1].toLowerCase().
-        	    equals("-files")){
-        	System.out.println(
-     		    "The file flag \"-files\" is missing! Please try again.");
-     	        System.exit(0);
-            }
-        }
+            //Check if files are found after the -files flag.
+	    if (i == args.length - 1) {
+		if (args[i].toLowerCase().equals("-files")) {
+		    System.out.println("The files list is missing! Please try again.");
+		    System.exit(0);
+		}
+                //Check if the -files flag is present in expected position.
+		if (!args[i - 1].toLowerCase().equals("-files")) {
+		    System.out.println("The file flag \"-files\" is missing! Please try again.");
+		    System.exit(0);
+		}
+	    }
 	}
-       
-
-
+        //TransferFile size check. If the list is larger than 5 files the program outputs message and closes.
 	if (fileList.size() > 5) {
 	    System.out.println(
 		    "Current limit is 5 files per one application run \nThe application will now close, please select 5 files max");
 	    System.exit(0);
 	}
-      return fileList;
-	
+	return fileList;
+
     }
- 
+
     /**
      * ArrayOfFiles() method builds a string representation of all files that are
      * going to be used in the transfer.

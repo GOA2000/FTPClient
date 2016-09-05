@@ -27,7 +27,7 @@ import static gorjan.helperTools.FTPlogger.*;
 
 public class FTPClientMain {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args)  {
 	
 	// Initialize Logger
 	configureLogger();
@@ -49,7 +49,12 @@ public class FTPClientMain {
 	executor.shutdown();
 	while (!executor.isTerminated()) {
 	    // Wait for termination of running executors.
-	    Thread.sleep(1000);
+	    try {
+		Thread.sleep(1000);
+	    } catch (InterruptedException e) {
+		Logger.getLogger("FTPlogger").warning("Thread sleep interuption.");
+		Logger.getLogger("FTPlogger").warning(e.toString());
+	    }
 	}
 
 	System.out.println("\nFinished all uploads");
